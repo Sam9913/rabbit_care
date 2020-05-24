@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rabbitcare/SafetyInfo.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,7 +41,7 @@ class SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => SafetyInfo(),
           ));
     });
   }
