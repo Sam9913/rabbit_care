@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   shared_preferences: ^0.5.7+2
   bubble: ^1.1.9+1
+  fluttertoast: ^4.0.0
   flutter_markdown: ^0.4.0
   configurable_expansion_tile: ^1.0.0
   url_launcher: ^5.4.10
@@ -51,7 +52,14 @@ flutter:
   uses-material-design: true
   assets:
     - images/logo.png
+    - images/home.png
     - images/rabbit.png
+    - images/myFeelingDiary.png
+    - images/talkToSomeone.png
+    - images/helpAFriend.png
+    - images/helplines.png
+    - images/psychology.png
+    - images/suicideWarning.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -69,12 +77,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Century Gothic
+      fonts:
+       - asset: font/Century Gothic 400.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
