@@ -15,9 +15,17 @@ class _HelplinesState extends State<Helplines> {
   Widget build(BuildContext context) {
     return Scaffold(
 			appBar: AppBar(
-				title: Align(alignment: Alignment.centerRight, child: Text("Helplines")),
-				leading: GestureDetector(
-						onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left)),
+				title: Align(alignment: Alignment.centerRight,
+						child: Text("Helplines", style: TextStyle(color: Colors.black),)),
+				flexibleSpace: Container(
+					child: Image(
+						image: AssetImage("images/helplinesSlide.png"),
+						fit: BoxFit.cover,
+					),
+				),
+				leading:  GestureDetector(
+						onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left,
+						color: Colors.black)),
 			),
 			body: SingleChildScrollView(
 				child: Padding(

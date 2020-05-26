@@ -16,12 +16,17 @@ class _SuicideWarningSignState extends State<SuicideWarningSign> {
 
     return Scaffold(
 			appBar: AppBar(
-				title: Align(
-						alignment: Alignment.centerRight,
-						child: Text("Suicide warning signs")),
-				leading: GestureDetector(
-						onTap: () => Navigator.pop(context),
-						child: Icon(Icons.keyboard_arrow_left)),
+				title: Align(alignment: Alignment.centerRight,
+						child: Text("Suicide Warning Signs", style: TextStyle(color: Colors.black),)),
+				flexibleSpace: Container(
+					child: Image(
+						image: AssetImage("images/warningSlide.png"),
+						fit: BoxFit.cover,
+					),
+				),
+				leading:  GestureDetector(
+						onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left,
+						color: Colors.black)),
 			),
 			body: Padding(
 			  padding: const EdgeInsets.all(8.0),

@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                             Text("  Who am I calling ？",
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 23,
+                                    fontSize: 20,
                                     fontFamily: 'Century Gothic'),
                                 textAlign: TextAlign.center),
                           ],
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                             Text("  Changing preferences",
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 23,
+                                    fontSize: 19,
                                     fontFamily: 'Century Gothic'),
                                 textAlign: TextAlign.center),
                           ],

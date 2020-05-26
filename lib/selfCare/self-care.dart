@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bubble/bubble.dart';
 import 'package:rabbitcare/safetyInfo/SafetyInfo.dart';
+import 'package:rabbitcare/selfCare/FeelingDiary.dart';
 import 'package:rabbitcare/selfCare/TalkToSomeone.dart';
 import 'dart:async';
 import '../HomePage.dart';
@@ -106,7 +107,10 @@ class _selfCareState extends State<selfCare> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => FeelingDiary()));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                     child: Stack(
