@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rabbitcare/CallingPage.dart';
+import 'package:rabbitcare/privacy.dart';
 import 'package:rabbitcare/safetyInfo/SafetyInfo.dart';
 import 'package:rabbitcare/selfCare/self-care.dart';
+import 'package:rabbitcare/termsCondition.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,11 +21,7 @@ class _HomePageState extends State<HomePage> {
   bool showText = false;
   bool showLanguage = false;
   bool isChecked = true;
-  Map<String, bool> language = {
-    "English (Default)": true,
-    "Bahasa Malaysia": false,
-    "华文": false
-  };
+  Map<String, bool> language = {"English (Default)": true, "Bahasa Malaysia": false, "华文": false};
   int _index = 0;
 
   @override
@@ -34,15 +32,13 @@ class _HomePageState extends State<HomePage> {
     _isVisible = true;
     _hideBottomBar.addListener(
       () {
-        if (_hideBottomBar.position.userScrollDirection ==
-            ScrollDirection.reverse) {
+        if (_hideBottomBar.position.userScrollDirection == ScrollDirection.reverse) {
           if (_isVisible)
             setState(() {
               _isVisible = false;
             });
         }
-        if (_hideBottomBar.position.userScrollDirection ==
-            ScrollDirection.forward) {
+        if (_hideBottomBar.position.userScrollDirection == ScrollDirection.forward) {
           if (!_isVisible)
             setState(() {
               _isVisible = true;
@@ -59,7 +55,137 @@ class _HomePageState extends State<HomePage> {
       theme: ThemeData(primaryColor: Color.fromRGBO(172, 229, 215, 1.0)),
       home: SafeArea(
         child: Scaffold(
-          drawer: Drawer(),
+          drawer: Drawer(
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Builder(
+                  builder: (context) => Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.topRight,
+                            colors: <Color>[
+                          Color.fromRGBO(172, 229, 215, 1.0),
+                          Color.fromRGBO(207, 235, 225, 1.0),
+                        ])),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                                onTap: () => Scaffold.of(context).openEndDrawer(),
+                                child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+                          ),
+                          Expanded(
+                              flex: 8,
+                              child:
+                                  Align(alignment: Alignment.centerRight, child: Text('Settings'))),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 8), child: Icon(Icons.settings)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.person),
+                      ),
+                      Text('Profile'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.supervisor_account),
+                      ),
+                      Text('Volunteer'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.message),
+                      ),
+                      Text('Share Feedback'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.history),
+                      ),
+                      Text('Call History'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.lock),
+                      ),
+                      Text('Privacy Policy'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        PrivacyPolicy()));
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.description),
+                      ),
+                      Text('Terms & Conditions'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        TermsCondition()));
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(
@@ -91,13 +217,10 @@ class _HomePageState extends State<HomePage> {
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        style: TextStyle(
-                            fontFamily: 'Century Gothic',
-                            color: Colors.black54),
+                        style: TextStyle(fontFamily: 'Century Gothic', color: Colors.black54),
                         children: [
                           TextSpan(
-                              text:
-                                  'Are you feeling overwhelmed, \n or having suicidal thoughts ？',
+                              text: 'Are you feeling overwhelmed, \n or having suicidal thoughts ？',
                               style: TextStyle(fontSize: 23)),
                           TextSpan(
                               text:
@@ -117,17 +240,17 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold)),
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                           context, MaterialPageRoute(builder: (context) => CallingPage()));
                     },
-                  child:Padding(
-                    padding: const EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                    child: Image.asset(
-                      "images/home.png",
-                      width: 300,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                      child: Image.asset(
+                        "images/home.png",
+                        width: 300,
+                      ),
                     ),
-                  ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(35.0, 15.0, 35.0, 0.0),
@@ -141,16 +264,11 @@ class _HomePageState extends State<HomePage> {
                             showText = !showText;
                           });
                         },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                         child: Row(
                           children: <Widget>[
-                            Icon(
-                                showText
-                                    ? Icons.keyboard_arrow_up
-                                    : Icons.keyboard_arrow_down,
-                                size: 35,
-                                color: Colors.white),
+                            Icon(showText ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                size: 35, color: Colors.white),
                             Text("  Who am I calling ？",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -164,16 +282,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                   showText
                       ? Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(35.0, 10.0, 35.0, 0.0),
+                          padding: const EdgeInsets.fromLTRB(35.0, 10.0, 35.0, 0.0),
                           child: SizedBox(
                             height: 130,
                             child: Text(
                                 "You will be connected to volunteers from Berienders, Life Line Association "
                                 "and trained cousellors and pshcho-logists... across Malaysia, based on whoever"
                                 "available on the line.",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w300),
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                                 textAlign: TextAlign.justify),
                           ),
                         )
@@ -192,16 +308,11 @@ class _HomePageState extends State<HomePage> {
                             showLanguage = !showLanguage;
                           });
                         },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                         child: Row(
                           children: <Widget>[
-                            Icon(
-                                showLanguage
-                                    ? Icons.keyboard_arrow_up
-                                    : Icons.keyboard_arrow_down,
-                                size: 35,
-                                color: Colors.white),
+                            Icon(showLanguage ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                size: 35, color: Colors.white),
                             Text("  Changing preferences",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -215,8 +326,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   showLanguage
                       ? Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 20.0),
+                          padding: const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 20.0),
                           child: SizedBox(
                             height: 200,
                             child: ListView(
@@ -230,8 +340,7 @@ class _HomePageState extends State<HomePage> {
                                   value: language[key],
                                   activeColor: Color.fromRGBO(0, 142, 142, 1.0),
                                   onChanged: (bool value) async {
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
                                     setState(() {
                                       language[key] = value;
                                       prefs.setBool(key, value);
@@ -277,20 +386,15 @@ class _HomePageState extends State<HomePage> {
                     items: [
                       BottomNavigationBarItem(
                           icon: Icon(Icons.map, color: Colors.black, size: 32),
-                          title: Text("Rabbit Self-Care",
-                              style: TextStyle(color: Colors.black))),
+                          title: Text("Rabbit Self-Care", style: TextStyle(color: Colors.black))),
+                      BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.home), title: Text("")),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.message,
-                              color: Colors.black, size: 32),
-                          title: Text("Safety Info",
-                              style: TextStyle(color: Colors.black))),
+                          icon: Icon(Icons.message, color: Colors.black, size: 32),
+                          title: Text("Safety Info", style: TextStyle(color: Colors.black))),
                     ],
                     backgroundColor: Color.fromRGBO(108, 200, 191, 1.0))),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
       ),
     );
@@ -299,17 +403,14 @@ class _HomePageState extends State<HomePage> {
   navigatePage(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => selfCare()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => selfCare()));
         break;
       case 1:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
         break;
 
       case 2:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SafetyInfo()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SafetyInfo()));
         break;
     }
     setState(() {
@@ -330,8 +431,7 @@ class _HomePageState extends State<HomePage> {
             return Dialog(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: Container(
                   height: 200,
                   decoration: BoxDecoration(
@@ -353,15 +453,12 @@ class _HomePageState extends State<HomePage> {
                                 ]),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10))),
+                                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
                         child: Text(
                             "\nHi there, welcome to RabbitCare! \nAre you a volunteer or a general\nuser？ \n",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontFamily: 'Century Gothic')),
+                                fontSize: 18, color: Colors.white, fontFamily: 'Century Gothic')),
                         width: double.infinity,
                       ),
                       Row(
@@ -391,8 +488,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   child: Container(
                                     alignment: Alignment.center,
-                                    constraints: const BoxConstraints(
-                                        minWidth: 130.0, minHeight: 50.0),
+                                    constraints:
+                                        const BoxConstraints(minWidth: 130.0, minHeight: 50.0),
                                     child: Text("Volunteer",
                                         style: TextStyle(
                                             color: Colors.white,
@@ -428,8 +525,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   child: Container(
                                     alignment: Alignment.center,
-                                    constraints: const BoxConstraints(
-                                        minWidth: 130.0, minHeight: 50.0),
+                                    constraints:
+                                        const BoxConstraints(minWidth: 130.0, minHeight: 50.0),
                                     child: Text("General User",
                                         style: TextStyle(
                                             color: Colors.white,

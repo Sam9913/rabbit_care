@@ -7,6 +7,8 @@ import 'package:rabbitcare/selfCare/FeelingDiary.dart';
 import 'package:rabbitcare/selfCare/TalkToSomeone.dart';
 import 'dart:async';
 import '../HomePage.dart';
+import '../privacy.dart';
+import '../termsCondition.dart';
 
 // ignore: camel_case_types
 class selfCare extends StatefulWidget {
@@ -28,15 +30,13 @@ class _selfCareState extends State<selfCare> {
     _isVisible = true;
     _hideBottomBar.addListener(
       () {
-        if (_hideBottomBar.position.userScrollDirection ==
-            ScrollDirection.reverse) {
+        if (_hideBottomBar.position.userScrollDirection == ScrollDirection.reverse) {
           if (_isVisible)
             setState(() {
               _isVisible = false;
             });
         }
-        if (_hideBottomBar.position.userScrollDirection ==
-            ScrollDirection.forward) {
+        if (_hideBottomBar.position.userScrollDirection == ScrollDirection.forward) {
           if (!_isVisible)
             setState(() {
               _isVisible = true;
@@ -53,13 +53,143 @@ class _selfCareState extends State<selfCare> {
       theme: ThemeData(primaryColor: Color.fromRGBO(172, 229, 215, 1.0)),
       home: SafeArea(
         child: Scaffold(
-          drawer: Drawer(),
+          drawer: Drawer(
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Builder(
+                  builder: (context) => Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.topRight,
+                            colors: <Color>[
+                              Color.fromRGBO(172, 229, 215, 1.0),
+                              Color.fromRGBO(207, 235, 225, 1.0),
+                            ])),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                                onTap: () => Scaffold.of(context).openEndDrawer(),
+                                child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+                          ),
+                          Expanded(
+                              flex: 8,
+                              child:
+                              Align(alignment: Alignment.centerRight, child: Text('Settings'))),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 8), child: Icon(Icons.settings)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.person),
+                      ),
+                      Text('Profile'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.supervisor_account),
+                      ),
+                      Text('Volunteer'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.message),
+                      ),
+                      Text('Share Feedback'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.history),
+                      ),
+                      Text('Call History'),
+                    ],
+                  ),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.lock),
+                      ),
+                      Text('Privacy Policy'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        PrivacyPolicy()));
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.description),
+                      ),
+                      Text('Terms & Conditions'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        TermsCondition()));
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
             title: Text("Self-Care",
                 style: TextStyle(
                     fontFamily: 'Century Gothic',
                     fontSize: 20,
-                    color:Colors.grey[600],
+                    color: Colors.grey[600],
                     fontWeight: FontWeight.bold)),
             flexibleSpace: Container(
               decoration: BoxDecoration(
@@ -98,9 +228,13 @@ class _selfCareState extends State<selfCare> {
                           margin: BubbleEdges.only(top: 10),
                           nip: BubbleNip.leftBottom,
                           color: Color.fromRGBO(135, 209, 214, 0.8),
-                          child: Text("Here are some useful ways to cope with overwhelming feelings"
-                              "such as stress, depression and anxiety.", maxLines: 4, style: TextStyle
-                            (fontSize: 16, color: Color.fromRGBO(109, 110, 113, 1.0)),),
+                          child: Text(
+                            "Here are some useful ways to cope with overwhelming feelings"
+                            "such as stress, depression and anxiety.",
+                            maxLines: 4,
+                            style:
+                                TextStyle(fontSize: 16, color: Color.fromRGBO(109, 110, 113, 1.0)),
+                          ),
                         ),
                       ),
                     ],
@@ -116,15 +250,21 @@ class _selfCareState extends State<selfCare> {
                     child: Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                       ClipRRect(
+                        ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset('images/myFeelingDiary.png',
-                              width: size.width/1.1, height: size.height/5.0,fit: BoxFit.cover),
+                              width: size.width / 1.1,
+                              height: size.height / 5.0,
+                              fit: BoxFit.cover),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 15.0),
-                          child:Text("My Feelings Diary",
-                            style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Century Gothic')),
+                          child: Text("My Feelings Diary",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Century Gothic')),
                         ),
                       ],
                     ),
@@ -134,7 +274,6 @@ class _selfCareState extends State<selfCare> {
                   onTap: () {
                     Navigator.push(
                         context, MaterialPageRoute(builder: (context) => TalkToSomeone()));
-
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
@@ -144,12 +283,18 @@ class _selfCareState extends State<selfCare> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset('images/talkToSomeone.png',
-                              width: size.width/1.1, height: size.height/5.0,fit: BoxFit.cover),
+                              width: size.width / 1.1,
+                              height: size.height / 5.0,
+                              fit: BoxFit.cover),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 15.0),
-                          child:Text("Talk to Someone You Trust",
-                              style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Century Gothic')),
+                          child: Text("Talk to Someone You Trust",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Century Gothic')),
                         ),
                       ],
                     ),
@@ -170,8 +315,7 @@ class _selfCareState extends State<selfCare> {
                     navigatePage(1);
                   });
                 },
-                child: Icon(Icons.home,
-                    size: 50, color: Color.fromRGBO(114, 161, 166, 1.0)),
+                child: Icon(Icons.home, size: 50, color: Color.fromRGBO(114, 161, 166, 1.0)),
               ),
             ),
           ),
@@ -186,21 +330,17 @@ class _selfCareState extends State<selfCare> {
                     currentIndex: _index,
                     items: [
                       BottomNavigationBarItem(
-                        icon:Icon(Icons.map, color: Colors.white70, size: 32),
-                              title: Text("Rabbit Self-Care",
-                              style: TextStyle(color: Colors.white))),
+                          icon: Icon(Icons.map, color: Colors.white70, size: 32),
+                          title: Text("Rabbit Self-Care", style: TextStyle(color: Colors.white))),
+                      BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.home), title: Text("")),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.message,
-                              color: Colors.black, size: 32),
+                          icon: Icon(Icons.message, color: Colors.black, size: 32),
                           title: Text("Safety Info",
-                              style: TextStyle(color: Colors.black,fontSize:16))),
+                              style: TextStyle(color: Colors.black, fontSize: 16))),
                     ],
                     backgroundColor: Color.fromRGBO(108, 200, 191, 1.0))),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
       ),
     );
@@ -209,17 +349,14 @@ class _selfCareState extends State<selfCare> {
   navigatePage(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => selfCare()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => selfCare()));
         break;
       case 1:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
         break;
 
       case 2:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SafetyInfo()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SafetyInfo()));
         break;
     }
     setState(() {
