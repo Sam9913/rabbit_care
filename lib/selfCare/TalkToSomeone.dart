@@ -10,6 +10,17 @@ class TalkToSomeone extends StatefulWidget {
 }
 
 class _TalkToSomeoneState extends State<TalkToSomeone> {
+  List<TextEditingController> personController = [TextEditingController(),TextEditingController(),TextEditingController()];
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    for(TextEditingController textEditingController in personController){
+      textEditingController.dispose();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +95,7 @@ class _TalkToSomeoneState extends State<TalkToSomeone> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: TextField(
+                          controller: personController[index],
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "Person " + (index + 1).toString(),

@@ -17,11 +17,13 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 						Expanded(
 								flex: 8,
 								child:
-								Align(alignment: Alignment.centerRight, child: Text('Settings', style: TextStyle
+								Align(alignment: Alignment.centerRight, child: Text('Privacy Policy', style:
+								TextStyle
 									(color: Colors.grey[600]),))),
 						Expanded(
 							child: Padding(
-									padding: EdgeInsets.only(left: 8), child: Icon(Icons.settings, color: Colors.grey[600],)),
+									padding: EdgeInsets.only(left: 8), child: Icon(Icons.lock, color: Colors
+									.grey[600],)),
 						),
 					],
 				),

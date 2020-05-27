@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rabbitcare/CallingPage.dart';
+import 'package:rabbitcare/SignUp.dart';
 import 'package:rabbitcare/privacy.dart';
 import 'package:rabbitcare/safetyInfo/SafetyInfo.dart';
 import 'package:rabbitcare/selfCare/self-care.dart';
@@ -119,8 +120,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
                   },
                 ),
                 ListTile(
