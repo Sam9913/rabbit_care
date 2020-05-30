@@ -18,7 +18,7 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Future.delayed(Duration.zero, ()=>afterCall(context));
+    Future.delayed(Duration.zero, ()=>callStatus(context));
     return MaterialApp(
       theme: ThemeData(primaryColor: Color.fromRGBO(172, 229, 215, 1.0)),
         home: SafeArea(
@@ -424,11 +424,14 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
       );
   }
 
-  afterCall(BuildContext context) async{
+  callStatus(BuildContext context) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool afterCall = prefs.getBool("afterCall");
-    if(!afterCall){
-      prefs.setBool("afterCall", true);
+    bool getCall = prefs.getBool("getCall");
+    bool missCall = prefs.getBool("missCall");
+    if(afterCall){
+      prefs.setBool("afterCall", false);
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -493,6 +496,186 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
                           },
                         ),
                       )
+                    ],
+                  )),
+            );
+          });
+    }
+    if(getCall){
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            var size = MediaQuery.of(context).size;
+            return Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Container(
+                  height: 220,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                                colors: <Color>[
+                                  Color.fromRGBO(48, 187, 152, 1.0),
+                                  Color.fromRGBO(146, 210, 187, 0.8),
+                                ]),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("A caller is calling.\nWould you able to accept the call?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontFamily: 'Century Gothic')),
+                        ),
+                        width: double.infinity,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    Colors.teal.withOpacity(0.7),
+                                    Colors.white,
+                                  ]),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: size.width/3,
+                          child: FlatButton(
+                            onPressed: () {
+                              prefs.setBool("getCall", false);
+                              Navigator.pop(context);
+                            },
+                            child: Text("Accept", style: TextStyle(color: Colors.white, fontSize:
+                            16),),
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    Colors.red,
+                                    Colors.white,
+                                  ]),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: size.width/3,
+                          child: FlatButton(
+                            onPressed: () {
+                              prefs.setBool("getCall", false);
+                              Navigator.pop(context);
+                            },
+                            child: Text("Decline", style: TextStyle(color: Colors.white, fontSize:
+                            16),),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            );
+          });
+    }
+    if(missCall){
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            var size = MediaQuery.of(context).size;
+            return Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                                colors: <Color>[
+                                  Color.fromRGBO(48, 187, 152, 1.0),
+                                  Color.fromRGBO(146, 210, 187, 0.8),
+                                ]),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Icon(Icons.lock),
+                              Text("To start receiving calls again, tap on the button below",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Century Gothic')),
+                            ],
+                          ),
+                        ),
+                        width: double.infinity,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    Colors.teal.withOpacity(0.7),
+                                    Colors.white,
+                                  ]),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: size.width/3,
+                          child: FlatButton(
+                            onPressed: () {
+                              prefs.setBool("missCall", false);
+                              Navigator.pop(context);
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.lock_open),
+                                Text(" Unlock", style: TextStyle(fontSize: 16),),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
                     ],
                   )),
             );
