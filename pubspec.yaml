@@ -34,6 +34,9 @@ dependencies:
   flutter_markdown: ^0.4.0
   configurable_expansion_tile: ^1.0.0
   url_launcher: ^5.4.10
+  permission_handler: ^5.0.0+hotfix.6
+  smooth_star_rating: ^1.0.3
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +63,22 @@ flutter:
     - images/helplines.png
     - images/psychology.png
     - images/suicideWarning.png
+    - images/helpFriendSlide.png
+    - images/helplinesSlide.png
+    - images/warningSlide.png
+    - images/psychoSlides.png
+    - images/angry.png
+    - images/anxious.png
+    - images/joy.png
+    - images/sad.png
+    - images/peace.png
+    - images/other.png
+    - images/family.png
+    - images/weather.png
+    - images/friends.png
+    - images/health.png
+    - images/food.png
+    - images/calculation.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

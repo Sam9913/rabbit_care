@@ -9,13 +9,24 @@ class HelpAFriend extends StatefulWidget {
 }
 
 class _HelpAFriendState extends State<HelpAFriend> {
+
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
-        title: Align(alignment: Alignment.centerRight, child: Text("Help a friend")),
-        leading: GestureDetector(
-            onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left)),
+				title: Align(alignment: Alignment.centerRight,
+						child: Text("Help A Friend", style: TextStyle(color: Colors.black),)),
+        flexibleSpace: Container(
+          child: Image(
+            image: AssetImage("images/helpFriendSlide.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        leading:  GestureDetector(
+              onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left,
+            color: Colors.black)),
       ),
       body: SingleChildScrollView(
         child: Padding(
