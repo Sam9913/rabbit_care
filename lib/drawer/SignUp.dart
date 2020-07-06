@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:rabbitcare/VolunteerProfile.dart';
+import 'file:///D:/Degree/FYP/testing/rabbit_care/rabbit_care/lib/drawer/VolunteerProfile.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -9,6 +9,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+	final conPasswordController = TextEditingController();
 	final fullNameController = TextEditingController();
 	final emailController = TextEditingController();
 	final phoneController = TextEditingController();
@@ -223,6 +224,34 @@ class _SignUpState extends State<SignUp> {
 									decoration: InputDecoration(
 										border: InputBorder.none,
 										hintText: "Password",
+									),
+								),
+							),
+						),
+					),
+
+					Padding(
+						padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+						child: Container(
+							decoration: BoxDecoration(
+								borderRadius: BorderRadius.circular(10.0),
+								color: Colors.white,
+								boxShadow: [
+									BoxShadow(
+										color: Colors.grey.withOpacity(0.5),
+										spreadRadius: 1,
+										blurRadius: 7,
+										offset: Offset(0, 3), // changes position of shadow
+									),
+								],
+							),
+							child: Padding(
+								padding: const EdgeInsets.only(left: 8.0),
+								child: TextField(
+									controller: conPasswordController,
+									decoration: InputDecoration(
+										border: InputBorder.none,
+										hintText: "Confirm Password",
 									),
 								),
 							),

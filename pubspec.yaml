@@ -35,6 +35,9 @@ dependencies:
   configurable_expansion_tile: ^1.0.0
   url_launcher: ^5.4.10
   permission_handler: ^5.0.0+hotfix.6
+  flutter_rating_bar: ^3.0.1+1
+  smooth_star_rating: ^1.0.3
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,7 @@ flutter:
     - images/food.png
     - images/white_rabbit.png
     - images/calculation.png
+    - images/front page background 2-29.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

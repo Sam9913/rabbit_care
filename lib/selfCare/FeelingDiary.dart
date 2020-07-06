@@ -1,4 +1,3 @@
-import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';

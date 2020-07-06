@@ -34,10 +34,19 @@ class _SuicideWarningSignState extends State<SuicideWarningSign> {
 			    child: Column(
 			    	crossAxisAlignment: CrossAxisAlignment.start,
 			    	children: <Widget>[
-			    		Bubble(
-			    				color: Color.fromRGBO(135, 209, 214, 0.8),
-			    				child: Text("Do a self-check or help others to notice the well being"
-			    				".", textAlign: TextAlign.center,)),
+			    		Container(
+			    				child: Padding(
+			    				  padding: const EdgeInsets.all(8.0),
+			    				  child: Center(
+			    				    child: Text("Do a self-check or help others to notice the well being"
+			    				    ".", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
+			    				  ),
+			    				),
+								decoration: BoxDecoration(
+									borderRadius: BorderRadius.circular(10.0),
+									color: Color.fromRGBO(135, 200, 200, 1.0),
+								),
+							),
 			    		Padding(
 			    		  padding: const EdgeInsets.all(8.0),
 			    		  child: ConfigurableExpansionTile(

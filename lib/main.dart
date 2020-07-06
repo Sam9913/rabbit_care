@@ -49,26 +49,15 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(0, 142, 142, 1.0),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              "images/logo.png",
-              width: 150,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "RABBIT CARE",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ],
+        child: Container(
+            width: size.width,
+            height: size.height,
+            child: Image.asset("images/front page background 2-29.png", fit: BoxFit.fill,)),
         ),
-      ),
     );
   }
 }

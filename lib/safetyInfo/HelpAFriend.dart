@@ -12,7 +12,6 @@ class _HelpAFriendState extends State<HelpAFriend> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,13 +32,21 @@ class _HelpAFriendState extends State<HelpAFriend> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              Bubble(
-								color: Color.fromRGBO(135, 209, 214, 0.8),
-                child: Text(
-                "Noticed someone close to you showing suicide warning "
-                "signs? Here are some ways to help them as a friend.",
-                textAlign: TextAlign.center,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color.fromRGBO(135, 200, 200, 1.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                    "Noticed someone close to you showing suicide warning "
+                    "signs? Here are some ways to help them as a friend.",
+                    textAlign: TextAlign.center, style: TextStyle(fontSize: 16),
               ),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bubble/bubble.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Helplines extends StatefulWidget {
@@ -10,6 +9,19 @@ class Helplines extends StatefulWidget {
 
 class _HelplinesState extends State<Helplines> {
 	Future<void> _launched;
+	final centerController = TextEditingController();
+
+	@override
+  void initState() {
+    super.initState();
+    centerController.text = "All centers";
+  }
+
+	@override
+  void dispose() {
+    super.dispose();
+    centerController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +44,20 @@ class _HelplinesState extends State<Helplines> {
 					padding: const EdgeInsets.all(8.0),
 					child: Column(
 						children: <Widget>[
-							Bubble(
-								color: Color.fromRGBO(135, 209, 214, 0.8),
-								child: Text(
-									"Want to contact specific helplines? \nHere are all the contact information of "
-											"the available helplines in Malaysia",
-									textAlign: TextAlign.center,
+							Container(
+								decoration: BoxDecoration(
+									borderRadius: BorderRadius.circular(10.0),
+									color: Color.fromRGBO(135, 200, 200, 1.0),
+								),
+								child: Padding(
+								  padding: const EdgeInsets.all(8.0),
+								  child: Center(
+								    child: Text(
+								    	"Want to contact specific helplines? \nHere are all the contact information of "
+								    			"the available helplines in Malaysia",
+								    	textAlign: TextAlign.center, style: TextStyle(fontSize: 16),
+								    ),
+								  ),
 								),
 							),
 							Padding(
@@ -48,18 +68,34 @@ class _HelplinesState extends State<Helplines> {
 										borderRadius: BorderRadius.circular(10.0),
 									),
 							  	child: Row(
-							  		children: <Widget>[
-							  			Expanded(
-													flex: 9,
-													child: Padding(
-													  padding: const EdgeInsets.all(8.0),
-													  child: Text("All centers"),
-													)),
-							  			Padding(
-							  			  padding: const EdgeInsets.all(8.0),
-							  			  child: Icon(Icons.search),
-							  			),
-							  		],
+							  	  children: <Widget>[
+							  	    Flexible(
+							  	      child: Padding(
+							  	        padding: const EdgeInsets.only(left:8.0, right: 8.0),
+							  	        child: TextField(
+														controller: centerController,
+												decoration: InputDecoration(
+													border: InputBorder.none,
+													focusedBorder: InputBorder.none,
+													enabledBorder: InputBorder.none,
+													errorBorder: InputBorder.none,
+													disabledBorder: InputBorder.none,
+													hintText: "Type center name here",
+												),
+										),
+							  	      ),
+							  	    ),
+											Expanded(
+													flex: 1,
+													child: Align(
+															alignment: Alignment.centerRight,
+															child: Padding(
+															  padding: const EdgeInsets.only(right: 8.0),
+															  child: GestureDetector(
+																		onTap: (){},
+																		child: Icon(Icons.search)),
+															))),
+							  	  ],
 							  	),
 							  ),
 							),

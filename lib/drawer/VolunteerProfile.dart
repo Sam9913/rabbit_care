@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rabbitcare/CallingPage.dart';
-import 'package:rabbitcare/YourProfile.dart';
+import 'file:///D:/Degree/FYP/testing/rabbit_care/rabbit_care/lib/drawer/YourProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VolunteerProfile extends StatefulWidget {
@@ -13,7 +13,7 @@ class VolunteerProfile extends StatefulWidget {
 class _VolunteerProfileState extends State<VolunteerProfile> {
   static bool status = false;
   int showLength = 3;
-  bool duringCall = false;
+  bool duringCall = true;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +192,7 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
                                                 Align(
                                                   alignment: Alignment.bottomRight,
                                                   child: FlatButton(
+                                                    onPressed: () {  },
                                                     child: Text("DOWNLOAD\nREPORT", textAlign:
                                                     TextAlign.right, style: TextStyle(fontWeight:
                                                     FontWeight.bold, color: Colors.teal.withOpacity(0.8)),),
@@ -426,11 +427,11 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
 
   callStatus(BuildContext context) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool afterCall = prefs.getBool("afterCall");
-    bool getCall = prefs.getBool("getCall");
-    bool missCall = prefs.getBool("missCall");
+    bool afterCall = false;
+    bool getCall = false;
+    bool missCall = false;
     if(afterCall){
-      prefs.setBool("afterCall", false);
+      //prefs.setBool("afterCall", false);
 
       showDialog(
           context: context,
