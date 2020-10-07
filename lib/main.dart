@@ -1,11 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:rabbitcare/drawer/VolunteerProfile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import 'HomePage.dart';
 
-main() {
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  if(sharedPreferences.getString("expire") != null) {
+    DateTime expireDateTime = DateTime.parse(sharedPreferences.getString("expire"));
+    if (expireDateTime
+        .difference(DateTime.now())
+        .isNegative) {
+      sharedPreferences.clear();
+    }
+  }
+
   runApp(MyApp());
 }
 
@@ -16,13 +30,6 @@ class MyApp extends StatelessWidget {
         home: SplashScreen(),
         theme: ThemeData(
           primaryColor: Color.fromRGBO(0, 142, 142, 1.0),
-          // Define the default TextTheme. Use this to specify the default
-          // text styling for headlines, titles, bodies of text, and more.
-          /*textTheme: TextTheme(
-            headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-          ),*/
         ));
   }
 }
@@ -35,15 +42,29 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
+  String token;
   @override
   void initState() {
     super.initState();
+    getData();
     Future.delayed(Duration(seconds: 4), () {
+      token != null? Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VolunteerProfile(),
+          )) :
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(),
           ));
+    });
+  }
+
+  getData() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = sharedPreferences.getString("token");
     });
   }
 

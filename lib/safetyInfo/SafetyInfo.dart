@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rabbitcare/drawer/CallHistory.dart';
-import 'package:rabbitcare/drawer/Profile.dart';
 import 'package:rabbitcare/drawer/VolunteerLogIn.dart';
 import 'package:rabbitcare/drawer/privacy.dart';
 import 'package:rabbitcare/drawer/termsCondition.dart';
@@ -12,6 +11,7 @@ import 'package:rabbitcare/safetyInfo/PsychologicalService.dart';
 import 'package:rabbitcare/safetyInfo/SuicideWarning.dart';
 import 'package:rabbitcare/selfCare/self-care.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../HomePage.dart';
 
 class SafetyInfo extends StatefulWidget {
@@ -24,11 +24,20 @@ class _SafetyInfoState extends State<SafetyInfo> {
   bool _isVisible;
   int _index = 0;
   String ratingScore = "I hate it";
+  String role = " ";
+
+  getRole() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      role = sharedPreferences.getString("chooseType");
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getRole();
     _hideBottomBar = new ScrollController();
     _isVisible = true;
     _hideBottomBar.addListener(
@@ -96,33 +105,22 @@ class _SafetyInfoState extends State<SafetyInfo> {
                   ),
                 ),
               ),
-              ListTile(
-                title: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.person),
-                    ),
-                    Text('Profile'),
-                  ],
+              Offstage(
+                offstage: role != "v",
+                child: ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.supervisor_account),
+                      ),
+                      Text('Volunteer'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                  },
                 ),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AskRole()));
-                },
-              ),
-              ListTile(
-                title: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.supervisor_account),
-                    ),
-                    Text('Volunteer'),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
-                },
               ),
               ListTile(
                 title: Row(
@@ -430,26 +428,29 @@ class _SafetyInfoState extends State<SafetyInfo> {
                       });
                 },
               ),
-              ListTile(
-                title: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.history),
-                    ),
-                    Text('Call History'),
-                  ],
+              Offstage(
+                offstage: role == "v",
+                child: ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.history),
+                      ),
+                      Text('Call History'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CallHistory()));
+                  },
                 ),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CallHistory()));
-                },
               ),
               ListTile(
                 title: Row(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.lock),
+                      child: Icon(Icons.question_answer),
                     ),
                     Text('Privacy Policy'),
                   ],

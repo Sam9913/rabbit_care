@@ -1,11 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rabbitcare/CallingPage.dart';
-import 'file:///D:/Degree/FYP/testing/rabbit_care/rabbit_care/lib/drawer/YourProfile.dart';
+import 'package:rabbitcare/HomePage.dart';
+import 'package:rabbitcare/drawer/privacy.dart';
+import 'package:rabbitcare/drawer/termsCondition.dart';
+import 'package:rabbitcare/model/User.dart';
+import 'YourProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class VolunteerProfile extends StatefulWidget {
+  final User user;
+
+  const VolunteerProfile({Key key, this.user}) : super(key: key);
+
   @override
   _VolunteerProfileState createState() => _VolunteerProfileState();
 }
@@ -13,7 +23,27 @@ class VolunteerProfile extends StatefulWidget {
 class _VolunteerProfileState extends State<VolunteerProfile> {
   static bool status = false;
   int showLength = 3;
-  bool duringCall = true;
+  bool duringCall = false;
+  String ratingScore = "I hate it";
+
+  logout() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString("token");
+
+    var response = await http.get("https://rabbitcare.000webhostapp.com/api/auth/logout",
+        headers: {
+          'Authorization': token,
+        });
+
+    if(response.statusCode == 200) {
+      sharedPreferences.remove("token");
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +53,409 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
       theme: ThemeData(primaryColor: Color.fromRGBO(172, 229, 215, 1.0)),
         home: SafeArea(
         child: Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Builder(
+                  builder: (context) => Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.topRight,
+                            colors: <Color>[
+                              Color.fromRGBO(172, 229, 215, 1.0),
+                              Color.fromRGBO(207, 235, 225, 1.0),
+                            ])),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                                onTap: () => Scaffold.of(context).openEndDrawer(),
+                                child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+                          ),
+                          Expanded(
+                              flex: 8,
+                              child:
+                              Align(alignment: Alignment.centerRight, child: Text('Settings'))),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 8, right: 8), child: Icon(Icons
+                                .settings)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.message),
+                      ),
+                      Text('Share Feedback'),
+                    ],
+                  ),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            child: Container(
+                              height: 275,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.topRight,
+                                            colors: <Color>[
+                                              Color.fromRGBO(48, 187, 152, 1.0),
+                                              Color.fromRGBO(146, 210, 187, 0.8),
+                                            ]),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5), topRight: Radius
+                                            .circular(5))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                              "We love to hear from you. ",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 18, color: Colors.white, fontFamily: 'Century Gothic')),
+                                          Image.asset("images/white_rabbit.png", width: 80,),
+                                        ],
+                                      ),
+                                    ),
+                                    width: double.infinity,
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("How do you feel so about our app so far?",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 18, fontFamily: 'Century Gothic')),
+                                  ),
+
+                                  StatefulBuilder(
+                                    builder: (context, setState){
+                                      return Column(
+                                        children: <Widget>[
+                                          RatingBar(
+                                            initialRating: 1,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              setState(() {
+                                                if(rating <= 3.0){
+                                                  ratingScore = "I hate it";
+                                                }
+                                                else if(rating == 4.0){
+                                                  ratingScore = "Great!";
+                                                }
+                                                else{
+                                                  ratingScore = "I love it!";
+                                                }
+                                              });
+                                            },
+                                          ),
+
+                                          Text(ratingScore),
+                                        ],
+                                      );
+                                    },
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        gradient: LinearGradient(
+                                          colors: [Color.fromRGBO(135, 209, 214, 0.8), Colors.white],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomLeft,
+                                        ),
+                                      ),
+                                      child: FlatButton(
+                                        onPressed: (){
+                                          if(ratingScore == "I hate it") {
+                                            Navigator.pop(context);
+                                            showDialog(context: context,
+                                                builder: (BuildContext context) {
+                                                  return Dialog(
+                                                      elevation: 0,
+                                                      backgroundColor: Colors.transparent,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(12)),
+                                                      child: Container(
+                                                          height: 350,
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            shape: BoxShape.rectangle,
+                                                            borderRadius:
+                                                            BorderRadius.circular(5.0),
+                                                          ),
+                                                          child: Column(children: <Widget>[
+                                                            Container(
+                                                              height: 100,
+                                                              decoration: BoxDecoration(
+                                                                  gradient: LinearGradient(
+                                                                      begin: Alignment.topLeft,
+                                                                      end: Alignment.topRight,
+                                                                      colors: <Color>[
+                                                                        Color.fromRGBO(
+                                                                            38, 170, 225, 1.0),
+                                                                        Color.fromRGBO(
+                                                                            146, 210, 187, 0.8),
+                                                                      ]),
+                                                                  shape: BoxShape.rectangle,
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topLeft: Radius.circular(5),
+                                                                      topRight:
+                                                                      Radius.circular(5))),
+                                                              child: Padding(
+                                                                padding: const EdgeInsets
+                                                                    .fromLTRB(16.0,16.0,8.0,0.0),
+                                                                child: Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: <Widget>[
+                                                                    Text("We're "
+                                                                        "sorry to  hear "
+                                                                        "that...",style: TextStyle(
+                                                                        fontSize: 18,
+                                                                        color: Colors.white,
+                                                                        fontFamily:
+                                                                        'Century Gothic', fontWeight:
+                                                                    FontWeight.bold),),
+                                                                    Flexible(
+                                                                      child: Text("What can we"
+                                                                          " do in future to "
+                                                                          "improve our app? How"
+                                                                          " can we help "
+                                                                          "better?", style: TextStyle(
+                                                                          fontSize: 16,
+                                                                          color: Colors.white,
+                                                                          fontFamily:
+                                                                          'Century '
+                                                                              'Gothic'),
+                                                                        maxLines: 2,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              width: double.infinity,
+                                                            ),
+
+                                                            Padding(
+                                                              padding: EdgeInsets.all(8.0),
+                                                              child: TextField(
+                                                                maxLength: 350,
+                                                                maxLines: 8,
+                                                                decoration: InputDecoration
+                                                                    .collapsed(hintText: "Tell us"
+                                                                    " here (Limited "
+                                                                    "350 words)"),
+                                                              ),
+                                                            ),
+
+                                                            Align(
+                                                              alignment: Alignment.bottomRight,
+                                                              child: FlatButton(
+                                                                child: Text("THAT'S ALL", textAlign:
+                                                                TextAlign.right, style: TextStyle(fontWeight:
+                                                                FontWeight.bold, color: Colors.teal.withOpacity(0.8)),),
+                                                                onPressed: (){
+                                                                  Navigator.pop(context);
+                                                                },
+                                                              ),
+                                                            )
+
+                                                          ])));
+                                                });
+                                          }
+                                          else{
+                                            Navigator.pop(context);
+                                            showDialog(context: context,
+                                                builder: (BuildContext context) {
+                                                  return Dialog(
+                                                      elevation: 0,
+                                                      backgroundColor: Colors.transparent,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(12)),
+                                                      child: Container(
+                                                          height: 200,
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            shape: BoxShape.rectangle,
+                                                            borderRadius:
+                                                            BorderRadius.circular(5.0),
+                                                          ),
+                                                          child: Column(children: <Widget>[
+                                                            Container(
+                                                              height: 100,
+                                                              decoration: BoxDecoration(
+                                                                  gradient: LinearGradient(
+                                                                      begin: Alignment.topLeft,
+                                                                      end: Alignment.topRight,
+                                                                      colors: <Color>[
+                                                                        Color.fromRGBO(48, 187, 152, 1.0),
+                                                                        Color.fromRGBO(
+                                                                            146, 210, 187, 0.8),
+                                                                      ]),
+                                                                  shape: BoxShape.rectangle,
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topLeft: Radius.circular(5),
+                                                                      topRight:
+                                                                      Radius.circular(5))),
+                                                              child: Padding(
+                                                                padding: const EdgeInsets
+                                                                    .fromLTRB(16.0,16.0,8.0,0.0),
+                                                                child: Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: <Widget>[
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                          "We are glad that you "
+                                                                              "enjoyed the app! ",
+                                                                          textAlign: TextAlign.left,
+                                                                          style: TextStyle(
+                                                                              fontSize: 18, color: Colors.white, fontFamily: 'Century Gothic')),
+                                                                    ),
+                                                                    Image.asset("images/white_rabbit.png", width: 80,),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              width: double.infinity,
+                                                            ),
+
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Text("Share your comment to others "
+                                                                  "too!",
+                                                                  textAlign: TextAlign.left,
+                                                                  style: TextStyle(
+                                                                      fontSize: 18, fontFamily: 'Century Gothic')),
+                                                            ),
+
+                                                            Container(
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(10.0),
+                                                                gradient: LinearGradient(
+                                                                  colors: [Color.fromRGBO(135, 209, 214, 0.8), Colors.white],
+                                                                  begin: Alignment.topLeft,
+                                                                  end: Alignment.bottomLeft,
+                                                                ),
+                                                              ),
+                                                              child: FlatButton(
+                                                                onPressed: (){
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                child: Text("Share now"),
+                                                              ),
+                                                            ),
+
+                                                          ])));
+                                                });
+                                          }
+                                        },
+                                        child: Text("Confirm"),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.power_settings_new),
+                      ),
+                      Text('Log out'),
+                    ],
+                  ),
+                  onTap: () {
+                    logout();
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.question_answer),
+                      ),
+                      Text('Privacy Policy'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        PrivacyPolicy()));
+                  },
+                ),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.description),
+                      ),
+                      Text('Terms & Conditions'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                        TermsCondition()));
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
+            leading: duringCall ? null : Builder(
+              builder: (context) => IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: Icon(Icons.menu, color: Colors.grey[600], size: 40),
+              ),
+            ),
             automaticallyImplyLeading: false,
-            actions: <Widget>[],
             title: duringCall ? Row(
               children: <Widget>[
                 Padding(
@@ -77,8 +507,8 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
                   child: Center(
                     child: InkWell(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => YouProfile
-                          ()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                            YourProfile(user: widget.user,)));
                       },
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
@@ -97,11 +527,13 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("Name"),
+                  child: Text(widget.user.username, style: TextStyle(fontWeight: FontWeight.bold,
+                      fontSize: 16
+                  ),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("NGO Organization Name"),
+                  child: Text(widget.user.ngo_name),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),

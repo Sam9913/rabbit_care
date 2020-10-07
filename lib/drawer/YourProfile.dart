@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:rabbitcare/model/User.dart';
 
-class YouProfile extends StatefulWidget {
+class YourProfile extends StatefulWidget {
+	final User user;
+
+  const YourProfile({Key key, this.user}) : super(key: key);
+
   @override
-  _YouProfileState createState() => _YouProfileState();
+  _YourProfileState createState() => _YourProfileState();
 }
 
-class _YouProfileState extends State<YouProfile> {
+class _YourProfileState extends State<YourProfile> {
 	final usernameController = TextEditingController();
 	final emailController = TextEditingController();
 	final contactController = TextEditingController();
@@ -17,8 +22,18 @@ class _YouProfileState extends State<YouProfile> {
 	final conpassController = TextEditingController();
 
 	@override
+  void initState() {
+    super.initState();
+    setState(() {
+			usernameController.text = widget.user.username;
+			emailController.text = widget.user.email;
+			contactController.text = widget.user.phone_number;
+			organizationController.text = widget.user.ngo_name;
+    });
+  }
+
+	@override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 		usernameController.dispose();
 		emailController.dispose();

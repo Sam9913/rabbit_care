@@ -1,9 +1,15 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rabbitcare/drawer/SignUp.dart';
 import 'package:rabbitcare/drawer/VolunteerProfile.dart';
+import 'package:rabbitcare/model/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
 	@override
@@ -73,7 +79,7 @@ class _LoginState extends State<Login> {
 					  child: TextField(
 							controller: nameController,
 							decoration: InputDecoration(
-								hintText: "Username",
+								hintText: "Email",
 							),
 						),
 					),
@@ -100,7 +106,8 @@ class _LoginState extends State<Login> {
 					  	),
 					  	child: FlatButton(
 								onPressed: (){
-									Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerProfile()));
+									login(nameController.text, passwordController.text);
+									//
 								},
 					  		child: Text("Log In",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
 					  	),
@@ -108,7 +115,7 @@ class _LoginState extends State<Login> {
 					),
 
 					Padding(
-					  padding: const EdgeInsets.all(8.0),
+					  padding: const EdgeInsets.fromLTRB(16.0,16.0,8.0,8.0),
 					  child: InkWell(
 							onTap: (){
 								showDialog(
@@ -202,7 +209,7 @@ class _LoginState extends State<Login> {
 					  ),
 					),
 					Padding(
-					  padding: const EdgeInsets.all(8.0),
+					  padding: const EdgeInsets.fromLTRB(16.0,8.0,8.0,8.0),
 					  child: InkWell(
 					  	onTap: (){
 					  		Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
@@ -211,8 +218,108 @@ class _LoginState extends State<Login> {
 									fontWeight: FontWeight.bold),),
 					  ),
 					),
+					Padding(
+						padding: const EdgeInsets.fromLTRB(16.0,8.0,8.0,8.0),
+						child: InkWell(
+							onTap: (){
+
+							},
+							child: Text("Check registration status",style: TextStyle(color: Colors
+									.lightBlueAccent,
+									fontWeight: FontWeight.bold),),
+						),
+					),
 				],
 			),
 		);
 	}
+
+	void login(String email, String password) async {
+		SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+		Map data = {
+			'password': password,
+			'email': email,
+		};
+
+		var response = await http.post("https://rabbitcare.000webhostapp.com/api/auth/login", body:
+		data);
+
+		if(response.statusCode == 200){
+			Token token = Token.fromJson(json.decode(response.body));
+			sharedPreferences.setString("token", token.token_type + " " + token.access_token);
+			sharedPreferences.setString("expire", token.expire_at);
+
+			await getUser();
+		}
+		else{
+			Fluttertoast.showToast(
+					msg: "Server is busy, please try again later.",
+					toastLength: Toast.LENGTH_SHORT,
+					gravity: ToastGravity.BOTTOM,
+					timeInSecForIosWeb: 1,
+					backgroundColor: Colors.black,
+					textColor: Colors.white,
+					fontSize: 16.0
+			);
+		}
+	}
+
+	getUser() async{
+		SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+		String token = sharedPreferences.getString("token");
+
+		var response = await http.get("https://rabbitcare.000webhostapp.com/api/auth/user", headers: {
+			'Authorization': token,
+		});
+
+		if(response.statusCode == 200){
+			User user = User.fromJson(json.decode(response.body));
+
+			if(user.email_verified_at == null){
+				Fluttertoast.showToast(
+						msg: "Your email haven't be verified.",
+						toastLength: Toast.LENGTH_SHORT,
+						gravity: ToastGravity.BOTTOM,
+						timeInSecForIosWeb: 1,
+						backgroundColor: Colors.black,
+						textColor: Colors.white,
+						fontSize: 16.0
+				);
+
+				return;
+			}
+
+			Fluttertoast.showToast(
+					msg: "Welcome back, " + user.username,
+					toastLength: Toast.LENGTH_SHORT,
+					gravity: ToastGravity.BOTTOM,
+					timeInSecForIosWeb: 1,
+					backgroundColor: Colors.black,
+					textColor: Colors.white,
+					fontSize: 16.0
+			);
+
+			Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>VolunteerProfile
+				(user: user,)));
+		}
+		else{
+			logout();
+		}
+	}
+
+	logout() async{
+		SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+		String token = sharedPreferences.getString("token");
+
+		var response = await http.get("https://rabbitcare.000webhostapp.com/api/auth/logout",
+				headers: {
+					'Authorization': token,
+				});
+
+		if(response.statusCode == 200) {
+			sharedPreferences.remove("token");
+		}
+	}
+
 }

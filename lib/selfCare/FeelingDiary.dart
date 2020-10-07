@@ -10,6 +10,7 @@ class FeelingDiary extends StatefulWidget {
 class _FeelingDiaryState extends State<FeelingDiary> {
 	int showLength = 5;
 	bool off = false;
+	bool isClick = true;
   List<String> emotion = <String>["Depressed", "Angry", "Anxious", "Peaceful", "Joyful", "Others"];
   List<String> emotionIcon = <String>[
     "images/sad.png",
@@ -76,6 +77,13 @@ class _FeelingDiaryState extends State<FeelingDiary> {
         leading: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+        actions: [
+          IconButton(onPressed: (){
+            setState(() {
+              isClick = !isClick;
+            });
+          },icon: Icon(Icons.info, color: Colors.black87,)),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -83,12 +91,15 @@ class _FeelingDiaryState extends State<FeelingDiary> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Bubble(
-                color: Color.fromRGBO(135, 209, 214, 0.8),
-                child: Text(
-                  "Writing your feelings down and acknowledge them, it will help you to feel more"
-                  " ease",
-                  textAlign: TextAlign.center,
+              Offstage(
+                offstage: isClick,
+                child: Bubble(
+                  color: Color.fromRGBO(135, 209, 214, 0.8),
+                  child: Text(
+                    "Writing your feelings down and acknowledge them, it will help you to feel more"
+                        " ease",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
               Padding(

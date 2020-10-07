@@ -11,6 +11,7 @@ class TalkToSomeone extends StatefulWidget {
 
 class _TalkToSomeoneState extends State<TalkToSomeone> {
   List<TextEditingController> personController = [TextEditingController(),TextEditingController(),TextEditingController()];
+  bool isClick = true;
 
   @override
   void dispose() {
@@ -40,6 +41,13 @@ class _TalkToSomeoneState extends State<TalkToSomeone> {
         leading: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+        actions: [
+          IconButton(onPressed: (){
+            setState(() {
+              isClick = !isClick;
+            });
+          },icon: Icon(Icons.info, color: Colors.black87,)),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -47,12 +55,15 @@ class _TalkToSomeoneState extends State<TalkToSomeone> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Bubble(
-                color: Color.fromRGBO(135, 209, 214, 0.8),
-                child: Text(
-                  "Contact someone who you trust, your loved one, your family, or your friend. "
-											"It's okay to seek help from others.",
-                  textAlign: TextAlign.center,
+              Offstage(
+                offstage: isClick,
+                child: Bubble(
+                  color: Color.fromRGBO(135, 209, 214, 0.8),
+                  child: Text(
+                    "Contact someone who you trust, your loved one, your family, or your friend. "
+                        "It's okay to seek help from others.",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
               Padding(
@@ -142,9 +153,7 @@ class _TalkToSomeoneState extends State<TalkToSomeone> {
             ),
             child: FlatButton(child: Text("Yes, I want", style: TextStyle(color: Colors.black),),
                 onPressed: ()async{
-                  if(await Permission.contacts.request().isGranted){
-                    launch("tel://21213123123");
-                  }
+              launch("tel://21213123123");
               },),
           ),
         ),

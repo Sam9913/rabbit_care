@@ -10,6 +10,7 @@ class SuicideWarningSign extends StatefulWidget {
 }
 
 class _SuicideWarningSignState extends State<SuicideWarningSign> {
+	bool isClick = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,13 @@ class _SuicideWarningSignState extends State<SuicideWarningSign> {
 				leading:  GestureDetector(
 						onTap: () => Navigator.pop(context), child: Icon(Icons.keyboard_arrow_left,
 						color: Colors.black)),
+				actions: [
+					IconButton(onPressed: (){
+						setState(() {
+						  isClick = !isClick;
+						});
+					},icon: Icon(Icons.info, color: Colors.black87,)),
+				],
 			),
 			body: Padding(
 			  padding: const EdgeInsets.all(8.0),
@@ -34,19 +42,22 @@ class _SuicideWarningSignState extends State<SuicideWarningSign> {
 			    child: Column(
 			    	crossAxisAlignment: CrossAxisAlignment.start,
 			    	children: <Widget>[
-			    		Container(
-			    				child: Padding(
-			    				  padding: const EdgeInsets.all(8.0),
-			    				  child: Center(
-			    				    child: Text("Do a self-check or help others to notice the well being"
-			    				    ".", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
-			    				  ),
-			    				),
+			    		Offstage(
+								offstage: isClick,
+			    		  child: Container(
+			    		  		child: Padding(
+			    		  		  padding: const EdgeInsets.all(8.0),
+			    		  		  child: Center(
+			    		  		    child: Text("Do a self-check or help others to notice the well being"
+			    		  		    ".", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
+			    		  		  ),
+			    		  		),
 								decoration: BoxDecoration(
 									borderRadius: BorderRadius.circular(10.0),
 									color: Color.fromRGBO(135, 200, 200, 1.0),
 								),
 							),
+			    		),
 			    		Padding(
 			    		  padding: const EdgeInsets.all(8.0),
 			    		  child: ConfigurableExpansionTile(

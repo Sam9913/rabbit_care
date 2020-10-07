@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bubble/bubble.dart';
 import 'package:rabbitcare/drawer/CallHistory.dart';
-import 'package:rabbitcare/drawer/Profile.dart';
 import 'package:rabbitcare/drawer/VolunteerLogIn.dart';
 import 'package:rabbitcare/safetyInfo/SafetyInfo.dart';
 import 'package:rabbitcare/selfCare/FeelingDiary.dart';
 import 'package:rabbitcare/selfCare/TalkToSomeone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../HomePage.dart';
 import '../drawer/privacy.dart';
 import '../drawer/termsCondition.dart';
@@ -25,10 +25,19 @@ class _selfCareState extends State<selfCare> {
   bool _isVisible;
   int _index = 0;
   String ratingScore = "I hate it";
+  String role = " ";
+
+  getRole() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      role = sharedPreferences.getString("chooseType");
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    getRole();
     _hideBottomBar = new ScrollController();
     _isVisible = true;
     _hideBottomBar.addListener(
@@ -96,33 +105,22 @@ class _selfCareState extends State<selfCare> {
                     ),
                   ),
                 ),
-                ListTile(
-                  title: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.person),
-                      ),
-                      Text('Profile'),
-                    ],
+                Offstage(
+                  offstage: role != "v",
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.supervisor_account),
+                        ),
+                        Text('Volunteer'),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AskRole()));
-                  },
-                ),
-                ListTile(
-                  title: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.supervisor_account),
-                      ),
-                      Text('Volunteer'),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
-                  },
                 ),
                 ListTile(
                   title: Row(
@@ -430,26 +428,29 @@ class _selfCareState extends State<selfCare> {
                         });
                   },
                 ),
-                ListTile(
-                  title: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.history),
-                      ),
-                      Text('Call History'),
-                    ],
+                Offstage(
+                  offstage: role == "v",
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.history),
+                        ),
+                        Text('Call History'),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CallHistory()));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CallHistory()));
-                  },
                 ),
                 ListTile(
                   title: Row(
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.lock),
+                        child: Icon(Icons.question_answer),
                       ),
                       Text('Privacy Policy'),
                     ],
