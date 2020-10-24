@@ -102,7 +102,7 @@ class _HelplinesState extends State<Helplines> {
 																style: TextStyle(fontSize: 14),
 																decoration: InputDecoration(border: OutlineInputBorder())),
 														suggestionsCallback: (pattern) async {
-															return await FilteredNgoCenter.getSuggestions(pattern);
+															return FilteredNgoCenter.getSuggestions(pattern);
 														},
 														itemBuilder: (context, suggestion) {
 															return ListTile(

@@ -115,7 +115,7 @@ class _PsychologicalServiceState extends State<PsychologicalService> {
                                     style: TextStyle(fontSize: 14),
                                     decoration: InputDecoration(border: OutlineInputBorder())),
                                 suggestionsCallback: (pattern) async {
-                                  return await FilteredServiceCenter.getSuggestions(pattern);
+                                  return FilteredServiceCenter.getSuggestions(pattern);
                                 },
                                 itemBuilder: (context, suggestion) {
                                   return ListTile(

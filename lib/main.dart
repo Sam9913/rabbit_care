@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:rabbitcare/drawer/VolunteerProfile.dart';
+import 'package:rabbitcare/volunteer/VolunteerProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-
 import 'HomePage.dart';
 
 main() async {

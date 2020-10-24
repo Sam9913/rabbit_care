@@ -1,15 +1,23 @@
 class Token{
-	final String access_token;
-	final String token_type;
-	final String expire_at;
+	final String token;
 
-	Token({this.access_token, this.expire_at, this.token_type});
+	Token({this.token});
 
 	factory Token.fromJson(Map<String, dynamic> json) {
 		return Token(
-			access_token: json['access_token'],
-			token_type: json['token_type'],
-			expire_at: json['expire_at'],
+			token: json['token'],
+		);
+	}
+}
+
+class MiddlewareToken{
+	final Token success;
+
+	MiddlewareToken({this.success});
+
+	factory MiddlewareToken.fromJson(Map<String, dynamic> json) {
+		return MiddlewareToken(
+			success: Token.fromJson(json['success']),
 		);
 	}
 }
@@ -42,6 +50,22 @@ class User{
 			language:json['language'],
 			time_available:json['time_available'],
 			remarks:json['remarks'],
+		);
+	}
+}
+
+class InvitationCode {
+	int id;
+	String code;
+	String used_by;
+
+	InvitationCode({this.id, this.code, this.used_by});
+
+	factory InvitationCode.fromJson(Map<String, dynamic> json) {
+		return InvitationCode(
+			id: json['id'],
+			code: json['code'],
+			used_by: json['used_by'],
 		);
 	}
 }

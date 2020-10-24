@@ -30,19 +30,12 @@ class _VolunteerProfileState extends State<VolunteerProfile> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
 
-    var response = await http.get("https://rabbitcare.000webhostapp.com/api/auth/logout",
-        headers: {
-          'Authorization': token,
-        });
-
-    if(response.statusCode == 200) {
       sharedPreferences.remove("token");
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(),
           ));
-    }
   }
 
   @override

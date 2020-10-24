@@ -1,18 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rabbitcare/CallingPage.dart';
-import 'package:rabbitcare/drawer/SignUp.dart';
-import 'package:rabbitcare/drawer/VolunteerLogIn.dart';
+import 'package:rabbitcare/model/User.dart';
+import 'package:rabbitcare/volunteer/SignUp.dart';
+import 'package:rabbitcare/volunteer/VolunteerLogIn.dart';
 import 'package:rabbitcare/drawer/privacy.dart';
 import 'package:rabbitcare/safetyInfo/SafetyInfo.dart';
 import 'package:rabbitcare/selfCare/self-care.dart';
 import 'package:rabbitcare/drawer/termsCondition.dart';
+import 'package:rabbitcare/volunteer/CheckStatus.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:http/http.dart' as http;
 
 import 'drawer/CallHistory.dart';
 
@@ -49,6 +55,13 @@ class _HomePageState extends State<HomePage> {
   };
   int _index = 0;
   String token;
+  final TextEditingController inviationCode = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    inviationCode.dispose();
+  }
 
   @override
   void initState() {
@@ -94,33 +107,235 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  checkInvitationCode(String code) async{
+    var response = await http.get("https://rabbitcare.000webhostapp"
+        ".com/api/invitationcode/code=" + code);
+
+    var temp = jsonDecode(response.body);
+    if(response.statusCode == 200 && temp.length > 0){
+      InvitationCode tempCode = InvitationCode.fromJson(temp[0]);
+      print(tempCode.toString());
+      if(tempCode.used_by == null || tempCode.used_by.isEmpty) {
+        Navigator.pop(context);
+
+        setState(() {
+          inviationCode.clear();
+        });
+
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => SignUp(remarks: code,)));
+      }
+      else{
+        Fluttertoast.showToast(
+            msg: "Invitation code already used by other volunteer.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      }
+    }
+    else{
+      Fluttertoast.showToast(
+          msg: "Invitation code is invalid. Please ask inviter for help.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
+
+  }
+
   Widget volunteerHomePage(){
     var size = MediaQuery.of(context).size;
 
     return Container(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0,100.0,8.0,8.0),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Text("Hi, welcome volunteer.\n",
-                style: TextStyle(fontSize: 24,
-                    fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                InkWell(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder:
-                        (context) => Login()));
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: Text("Hi, welcome volunteer.\n",
+                  style: TextStyle(fontSize: 24,
+                      fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder:
+                          (context) => Login()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Material(
+                        child: SizedBox(
+                          width: size.width / 3,
+                          height: size.height / 6,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Icon(Icons.account_box, size: 50,),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text("Log In", style: TextStyle(fontSize: 20),),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        color: Color.fromRGBO(172, 229, 215, 1.0),
+                      ),
+                    ),
+                  ),
+
+                  InkWell(
+                    onTap: (){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              child: Container(
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.topRight,
+                                              colors: <Color>[
+                                                Color.fromRGBO(48, 187, 152, 1.0),
+                                                Color.fromRGBO(146, 210, 187, 0.8),
+                                              ]),
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(5), topRight: Radius
+                                              .circular(5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            "Invitation code",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 18, color: Colors.white, fontFamily: 'Century Gothic')),
+                                      ),
+                                      width: double.infinity,
+                                    ),
+
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(16.0,8.0,16.0,8.0),
+                                      child: TextField(
+                                        controller: inviationCode,
+                                        decoration: InputDecoration(
+                                          border:
+                                          new UnderlineInputBorder(borderSide: new BorderSide(color: Colors.black)),
+                                          hintText: "ex. ABC-123",
+                                        ),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RaisedButton(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                                        padding: const EdgeInsets.all(0.0),
+                                        onPressed: (){
+                                          checkInvitationCode(inviationCode.text);
+                                        },
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20.0),
+                                            gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.topRight, colors: <Color>[
+                                              Colors.tealAccent[100],
+                                              Colors.grey[100],
+                                            ],
+                                            ),
+                                          ),
+                                          child: Container(
+                                            constraints: BoxConstraints(minWidth: 100.0, minHeight:
+                                            36.0),
+                                            child: Center(
+                                              child: Text("Verify",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 18, fontFamily: 'Century Gothic',
+                                                      color: Colors.grey[600],
+                                                      fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Material(
+                        child: SizedBox(
+                          width: size.width / 3,
+                          height: size.height / 6,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Icon(Icons.person, size: 50,),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text("Sign Up", style: TextStyle(fontSize: 20),),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        color: Color.fromRGBO(172, 229, 215, 1.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              InkWell(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CheckStatus()));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Material(
                       child: SizedBox(
-                        width: size.width / 3,
+                        width: size.width/1.3,
                         height: size.height / 6,
                         child: Center(
                           child: Column(
@@ -128,11 +343,12 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: Icon(Icons.account_box, size: 50,),
+                                child: Icon(Icons.verified_user, size: 50,),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text("Log In", style: TextStyle(fontSize: 20),),
+                                child: Text("Check Registered Status", style: TextStyle
+                                  (fontSize: 20),),
                               ),
                             ],
                           ),
@@ -141,72 +357,11 @@ class _HomePageState extends State<HomePage> {
                       color: Color.fromRGBO(172, 229, 215, 1.0),
                     ),
                   ),
-                ),
-
-                InkWell(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Material(
-                      child: SizedBox(
-                        width: size.width / 3,
-                        height: size.height / 6,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Icon(Icons.person, size: 50,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text("Sign Up", style: TextStyle(fontSize: 20),),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      color: Color.fromRGBO(172, 229, 215, 1.0),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Material(
-                  child: SizedBox(
-                    width: size.width/1.3,
-                    height: size.height / 6,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Icon(Icons.verified_user, size: 50,),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text("Check Registered Status", style: TextStyle
-                              (fontSize: 20),),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  color: Color.fromRGBO(172, 229, 215, 1.0),
                 ),
               ),
-            ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -353,7 +508,7 @@ class _HomePageState extends State<HomePage> {
                       Text("  Changing preferences",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 23,
+                              fontSize: 20,
                               fontFamily: 'Century Gothic'),
                           textAlign: TextAlign.center),
                     ],
